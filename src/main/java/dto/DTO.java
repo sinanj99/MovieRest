@@ -19,6 +19,14 @@ public class DTO {
         this.dummyStr1 = r.getDummyStr1();
         this.dummyStr2 = r.getDummyStr2();
     }
+
+    public String getDummyStr1() {
+        return dummyStr1;
+    }
+
+    public String getDummyStr2() {
+        return dummyStr2;
+    }
     
     
 }

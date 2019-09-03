@@ -1,5 +1,6 @@
 package facades;
 
+import dto.DTO;
 import entities.RenameMe;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -15,13 +16,13 @@ public class FacadeExample {
 
     private static FacadeExample instance;
     private static EntityManagerFactory emf;
-    
+
     //Private Constructor to ensure Singleton
-    private FacadeExample() {}
-    
-    
+    private FacadeExample() {
+    }
+
     /**
-     * 
+     *
      * @param _emf
      * @return an instance of this facade class.
      */
@@ -36,43 +37,46 @@ public class FacadeExample {
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-    
+
     //TODO Remove/Change this before use
-    public long getRenameMeCount(){
+    public long getCount() {
         EntityManager em = emf.createEntityManager();
-        try{
-            long renameMeCount = (long)em.createQuery("SELECT COUNT(r) FROM RenameMe r").getSingleResult();
+        try {
+            long renameMeCount = (long) em.createQuery("SELECT COUNT(r) FROM RenameMe r").getSingleResult();
             return renameMeCount;
-        }finally{  
+        } finally {
             em.close();
         }
-        
+
     }
-    public List<RenameMe> getRenameMeAll(){
+
+    public List<DTO> getAll() {
         EntityManager em = emf.createEntityManager();
-        try{
-            TypedQuery<RenameMe> renameMe = em.createQuery("SELECT r FROM RenameMe r", RenameMe.class);
+        try {
+            TypedQuery<DTO> renameMe = em.createQuery("SELECT new dto.DTO(r) FROM RenameMe r", DTO.class);
             return renameMe.getResultList();
-        }finally{  
+        } finally {
             em.close();
         }
-        
+
     }
-    public RenameMe getRenameMeName(String name){
+
+    public DTO getByName(String name) {
         EntityManager em = emf.createEntityManager();
-        try{
-            TypedQuery<RenameMe> renameMe = em.createQuery("SELECT r FROM RenameMe r WHERE r.dummyStr1 = :name", RenameMe.class);
+        try {
+            TypedQuery<DTO> renameMe = em.createQuery("SELECT new dto.DTO(r) FROM RenameMe r WHERE r.dummyStr1 = :name", DTO.class);
             renameMe.setParameter("name", name);
             return renameMe.getSingleResult();
-        }finally{  
+        } finally {
             em.close();
         }
     }
-    public RenameMe getRenameMeId(int id){
+
+    public DTO getById(int id) {
         EntityManager em = emf.createEntityManager();
-        try{
-            return em.find(RenameMe.class,id);
-        }finally{  
+        try {
+            return new DTO(em.find(RenameMe.class, id));
+        } finally {
             em.close();
         }
     }
