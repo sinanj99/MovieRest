@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -47,5 +48,14 @@ public class FacadeExample {
         }
         
     }
-
+    public List<RenameMe> getRenameMeAll(){
+        EntityManager em = emf.createEntityManager();
+        try{
+            TypedQuery<RenameMe> renameMe = em.createQuery("SELECT COUNT(r) FROM RenameMe r", RenameMe.class);
+            return renameMe.getResultList();
+        }finally{  
+            em.close();
+        }
+        
+    }
 }

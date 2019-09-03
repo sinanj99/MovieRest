@@ -41,6 +41,12 @@ public class RenameMeResource {
         //System.out.println("--------------->"+count);
         return "{\"count\":"+count+"}";  //Done manually so no need for a DTO
     }
+    @Path("all")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getRenameMeAll() {
+        return GSON.toJson(FACADE.getRenameMeAll());  //Done manually so no need for a DTO
+    }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})

@@ -49,7 +49,6 @@ public class RenameMeResourceTest {
         //We are using the database on the virtual Vagrant image, so username password are the same for all dev-databases
         
         httpServer = startServer();
-        
         //Setup RestAssured
         RestAssured.baseURI = SERVER_URL;
         RestAssured.port = SERVER_PORT;
@@ -73,6 +72,8 @@ public class RenameMeResourceTest {
             em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
             em.persist(new RenameMe("Some txt","More text"));
             em.persist(new RenameMe("aaa","bbb"));
+            em.persist(new RenameMe("bbb","ccc"));
+            em.persist(new RenameMe("Freddy","Frøstrup"));
            
             em.getTransaction().commit();
         } finally {
@@ -96,6 +97,16 @@ public class RenameMeResourceTest {
         .statusCode(HttpStatus.OK_200.getStatusCode())
         .body("msg", equalTo("Hello World"));   
     }
+    //This test assumes the database contains two rows
+    @Test
+    public void testServerUp() throws Exception {
+        given()
+        .contentType("application/json")
+        .get("/xxx/").then()
+        .assertThat()
+        .statusCode(HttpStatus.OK_200.getStatusCode())
+        .body("msg", equalTo("Hello World"));   
+    }
     
     @Test
     public void testCount() throws Exception {
@@ -104,6 +115,15 @@ public class RenameMeResourceTest {
         .get("/xxx/count").then()
         .assertThat()
         .statusCode(HttpStatus.OK_200.getStatusCode())
-        .body("count", equalTo(2));   
+        .body("count", equalTo(4));   
     }
+//    @Test
+//    public void containsFreddy() throws Exception {
+//        given()
+//        .contentType("application/json")
+//        .get("/xxx/all").then()
+//        .assertThat()
+//        .statusCode(HttpStatus.OK_200.getStatusCode())
+//        .body("RenameMe", equalTo("Freddy"));   
+//    }
 }
