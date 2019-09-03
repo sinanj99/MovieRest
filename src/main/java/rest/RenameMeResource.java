@@ -2,6 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dto.DTO;
 import entities.RenameMe;
 import utils.EMF_Creator;
 import facades.FacadeExample;
@@ -33,32 +34,35 @@ public class RenameMeResource {
     public String demo() {
         return "{\"msg\":\"Hello World\"}";
     }
+    
     @Path("count")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getRenameMeCount() {
-        long count = FACADE.getRenameMeCount();
+    public String getCount() {
+        long count = FACADE.getCount();
         //System.out.println("--------------->"+count);
         return "{\"count\":"+count+"}";  //Done manually so no need for a DTO
     }
+    
     @Path("all")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getRenameMeAll() {
-        return GSON.toJson(FACADE.getRenameMeAll());  //Done manually so no need for a DTO
+    public String getAll() {
+        return GSON.toJson(FACADE.getAll());
     }
+    
     @GET
     @Path("/name/{name}")
     @Produces({MediaType.APPLICATION_JSON})
-    public String getCustomerByName(@PathParam("name")String name) {
-        return GSON.toJson(FACADE.getRenameMeName(name));
+    public String getByName(@PathParam("name")String name) {
+        return GSON.toJson(FACADE.getByName(name));
     }
     
     @GET
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public String getCustomerById(@PathParam("id") int id) {
-         return GSON.toJson(FACADE.getRenameMeId(id));
+    public String getById(@PathParam("id") int id) {
+         return GSON.toJson(FACADE.getById(id));
     }
     
     @POST
