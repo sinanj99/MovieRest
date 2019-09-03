@@ -97,8 +97,7 @@ public class RenameMeResourceTest {
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("msg", equalTo("Hello World"));
     }
-
-    //This test assumes the database contains two rows
+    
     @Test
     public void testServerUp() throws Exception {
         given()
@@ -128,7 +127,7 @@ public class RenameMeResourceTest {
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body(containsString("Freddy"));
     }
-    
+
     @Test
     public void testName() throws Exception {
         given()
@@ -139,7 +138,7 @@ public class RenameMeResourceTest {
                 .body("dummyStr1", equalTo("Freddy"));
     }
 
-    // doesn't work for some reason
+//    fails for some reason :-(
 //    @Test
 //    public void testID() throws Exception {
 //        given()
