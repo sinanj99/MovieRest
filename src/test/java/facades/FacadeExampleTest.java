@@ -43,8 +43,8 @@ public class FacadeExampleTest {
      */
     @BeforeAll
     public static void setUpClassV2() {
-       emf = EMF_Creator.createEntityManagerFactory(DbSelector.TEST,Strategy.DROP_AND_CREATE);
-       facade = FacadeExample.getFacadeExample(emf);
+        emf = EMF_Creator.createEntityManagerFactory(DbSelector.TEST, Strategy.DROP_AND_CREATE);
+        facade = FacadeExample.getFacadeExample(emf);
     }
 
     @AfterAll
@@ -62,6 +62,7 @@ public class FacadeExampleTest {
             em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
             em.persist(new RenameMe("Some txt", "More text"));
             em.persist(new RenameMe("aaa", "bbb"));
+            em.persist(new RenameMe("Freddy", "bbb"));
 
             em.getTransaction().commit();
         } finally {
@@ -77,7 +78,15 @@ public class FacadeExampleTest {
     // TODO: Delete or change this method 
     @Test
     public void testAFacadeMethod() {
-        assertEquals(2, facade.getRenameMeCount(), "Expects two rows in the database");
+        assertEquals(3, facade.getCount(), "Expects two rows in the database");
     }
+    @Test
+    public void testGetByName() {
+        assertEquals("Freddy", facade.getByName("Freddy").getDummyStr1());
+    }
+//    @Test
+//    public void testGetById() {
+//        assertEquals(4, facade.getByName("Freddy").getDummyStr1());
+//    }
 
 }
