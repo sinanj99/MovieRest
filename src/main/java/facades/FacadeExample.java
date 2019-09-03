@@ -51,11 +51,29 @@ public class FacadeExample {
     public List<RenameMe> getRenameMeAll(){
         EntityManager em = emf.createEntityManager();
         try{
-            TypedQuery<RenameMe> renameMe = em.createQuery("SELECT COUNT(r) FROM RenameMe r", RenameMe.class);
+            TypedQuery<RenameMe> renameMe = em.createQuery("SELECT r FROM RenameMe r", RenameMe.class);
             return renameMe.getResultList();
         }finally{  
             em.close();
         }
         
+    }
+    public RenameMe getRenameMeName(String name){
+        EntityManager em = emf.createEntityManager();
+        try{
+            TypedQuery<RenameMe> renameMe = em.createQuery("SELECT r FROM RenameMe r WHERE r.dummyStr1 = :name", RenameMe.class);
+            renameMe.setParameter("name", name);
+            return renameMe.getSingleResult();
+        }finally{  
+            em.close();
+        }
+    }
+    public RenameMe getRenameMeId(int id){
+        EntityManager em = emf.createEntityManager();
+        try{
+            return em.find(RenameMe.class,id);
+        }finally{  
+            em.close();
+        }
     }
 }

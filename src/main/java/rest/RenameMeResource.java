@@ -47,7 +47,20 @@ public class RenameMeResource {
     public String getRenameMeAll() {
         return GSON.toJson(FACADE.getRenameMeAll());  //Done manually so no need for a DTO
     }
-
+    @GET
+    @Path("/name/{name}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getCustomerByName(@PathParam("name")String name) {
+        return GSON.toJson(FACADE.getRenameMeName(name));
+    }
+    
+    @GET
+    @Path("/{id}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String getCustomerById(@PathParam("id") int id) {
+         return GSON.toJson(FACADE.getRenameMeId(id));
+    }
+    
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     public void create(RenameMe entity) {

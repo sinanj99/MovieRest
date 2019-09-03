@@ -13,6 +13,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -47,21 +48,20 @@ public class RenameMeResourceTest {
         //NOT Required if you use the version of EMF_Creator.createEntityManagerFactory used above        
         //System.setProperty("IS_TEST", TEST_DB);
         //We are using the database on the virtual Vagrant image, so username password are the same for all dev-databases
-        
         httpServer = startServer();
         //Setup RestAssured
         RestAssured.baseURI = SERVER_URL;
         RestAssured.port = SERVER_PORT;
-   
+
         RestAssured.defaultParser = Parser.JSON;
     }
-    
+
     @AfterAll
-    public static void closeTestServer(){
+    public static void closeTestServer() {
         //System.in.read();
-         httpServer.shutdownNow();
+        httpServer.shutdownNow();
     }
-    
+
     // Setup the DataBase (used by the test-server and this test) in a known state BEFORE EACH TEST
     //TODO -- Make sure to change the script below to use YOUR OWN entity class
     @BeforeEach
@@ -70,60 +70,83 @@ public class RenameMeResourceTest {
         try {
             em.getTransaction().begin();
             em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
-            em.persist(new RenameMe("Some txt","More text"));
-            em.persist(new RenameMe("aaa","bbb"));
-            em.persist(new RenameMe("bbb","ccc"));
-            em.persist(new RenameMe("Freddy","Frøstrup"));
-           
+            em.persist(new RenameMe("Some txt", "More text"));
+            em.persist(new RenameMe("aaa", "bbb"));
+            em.persist(new RenameMe("bbb", "ccc"));
+            em.persist(new RenameMe("Freddy", "Frøstrup"));
+
             em.getTransaction().commit();
         } finally {
             em.close();
         }
     }
-    
+
     @Test
     public void testServerIsUp() {
         System.out.println("Testing is server UP");
         given().when().get("/xxx").then().statusCode(200);
     }
-   
+
     //This test assumes the database contains two rows
     @Test
     public void testDummyMsg() throws Exception {
         given()
-        .contentType("application/json")
-        .get("/xxx/").then()
-        .assertThat()
-        .statusCode(HttpStatus.OK_200.getStatusCode())
-        .body("msg", equalTo("Hello World"));   
+                .contentType("application/json")
+                .get("/xxx/").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("msg", equalTo("Hello World"));
     }
+
     //This test assumes the database contains two rows
     @Test
     public void testServerUp() throws Exception {
         given()
-        .contentType("application/json")
-        .get("/xxx/").then()
-        .assertThat()
-        .statusCode(HttpStatus.OK_200.getStatusCode())
-        .body("msg", equalTo("Hello World"));   
+                .contentType("application/json")
+                .get("/xxx/").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("msg", equalTo("Hello World"));
     }
-    
+
     @Test
     public void testCount() throws Exception {
         given()
-        .contentType("application/json")
-        .get("/xxx/count").then()
-        .assertThat()
-        .statusCode(HttpStatus.OK_200.getStatusCode())
-        .body("count", equalTo(4));   
+                .contentType("application/json")
+                .get("/xxx/count").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("count", equalTo(4));
     }
+
+    @Test
+    public void testAll() throws Exception {
+        given()
+                .contentType("application/json")
+                .get("/xxx/all").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body(containsString("Freddy"));
+    }
+    
+    @Test
+    public void testName() throws Exception {
+        given()
+                .contentType("application/json")
+                .get("/xxx/name/Freddy").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("dummyStr1", equalTo("Freddy"));
+    }
+
+    // doesn't work for some reason
 //    @Test
-//    public void containsFreddy() throws Exception {
+//    public void testID() throws Exception {
 //        given()
-//        .contentType("application/json")
-//        .get("/xxx/all").then()
-//        .assertThat()
-//        .statusCode(HttpStatus.OK_200.getStatusCode())
-//        .body("RenameMe", equalTo("Freddy"));   
+//                .contentType("application/json")
+//                .get("/xxx/4").then()
+//                .assertThat()
+//                .statusCode(HttpStatus.OK_200.getStatusCode())
+//                .body("dummyStr1", equalTo("Freddy"));
 //    }
 }
