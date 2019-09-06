@@ -1,50 +1,35 @@
 package facades;
 
 import utils.EMF_Creator;
-import entities.RenameMe;
+import entities.Movie;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.Settings;
 import utils.EMF_Creator.DbSelector;
 import utils.EMF_Creator.Strategy;
 
 //Uncomment the line below, to temporarily disable this test
 //@Disabled
-public class FacadeExampleTest {
+public class MovieFacadeTest {
 
     private static EntityManagerFactory emf;
-    private static FacadeExample facade;
+    private static MovieFacade facade;
 
-    public FacadeExampleTest() {
+    public MovieFacadeTest() {
     }
 
-    //@BeforeAll
-    public static void setUpClass() {
-        emf = EMF_Creator.createEntityManagerFactory(
-                "pu",
-                "jdbc:mysql://localhost:3307/startcode_test",
-                "dev",
-                "ax2",
-                EMF_Creator.Strategy.CREATE);
-        facade = FacadeExample.getFacadeExample(emf);
-    }
-
-    /*   **** HINT **** 
-        A better way to handle configuration values, compared to the UNUSED example above, is to store those values
-        ONE COMMON place accessible from anywhere.
-        The file config.properties and the corresponding helper class utils.Settings is added just to do that. 
-        See below for how to use these files. This is our RECOMENDED strategy
-     */
     @BeforeAll
-    public static void setUpClassV2() {
+    public static void setUpClass() {
         emf = EMF_Creator.createEntityManagerFactory(DbSelector.TEST, Strategy.DROP_AND_CREATE);
-        facade = FacadeExample.getFacadeExample(emf);
+        facade = MovieFacade.getMovieFacade(emf);
     }
 
     @AfterAll
@@ -59,10 +44,13 @@ public class FacadeExampleTest {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
-            em.persist(new RenameMe("Some txt", "More text"));
-            em.persist(new RenameMe("aaa", "bbb"));
-            em.persist(new RenameMe("Freddy", "bbb"));
+            em.createNamedQuery("Movie.deleteAllRows").executeUpdate();
+            List<String> actors = new ArrayList();
+            actors.add("Hans Hansen");
+            actors.add("Jens Jensen");
+            em.persist(new Movie(1999, "aaa", actors));
+            em.persist(new Movie(2010, "bbb", actors));
+            em.persist(new Movie(2019, "ccc", actors));
 
             em.getTransaction().commit();
         } finally {
@@ -80,9 +68,10 @@ public class FacadeExampleTest {
     public void testAFacadeMethod() {
         assertEquals(3, facade.getCount(), "Expects two rows in the database");
     }
+
     @Test
     public void testGetByName() {
-        assertEquals("Freddy", facade.getByName("Freddy").getDummyStr1());
+        assertEquals("aaa", facade.getByName("aaa").getName());
     }
 //    @Test
 //    public void testGetById() {

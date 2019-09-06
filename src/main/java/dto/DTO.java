@@ -5,28 +5,35 @@
  */
 package dto;
 
-import entities.RenameMe;
+import entities.Movie;
+import java.util.List;
 
 /**
  *
  * @author sinanjasar
  */
 public class DTO {
-    private String dummyStr1;
-    private String dummyStr2;
 
-    public DTO(RenameMe r) {
-        this.dummyStr1 = r.getDummyStr1();
-        this.dummyStr2 = r.getDummyStr2();
+    private String name;
+    private int releaseDate;
+    private List<String> actors;
+
+    public DTO(Movie r) {
+        this.name = r.getName();
+        this.releaseDate = r.getReleaseDate();
+        this.actors = r.getActors();
     }
 
-    public String getDummyStr1() {
-        return dummyStr1;
+    public String getName() {
+        return name;
     }
 
-    public String getDummyStr2() {
-        return dummyStr2;
+    public int getReleaseDate() {
+        return releaseDate;
     }
-    
-    
+
+    public List<String> getActors() {
+        return actors;
+    }
+
 }

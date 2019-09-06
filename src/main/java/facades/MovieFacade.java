@@ -1,7 +1,7 @@
 package facades;
 
 import dto.DTO;
-import entities.RenameMe;
+import entities.Movie;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -12,13 +12,13 @@ import javax.persistence.TypedQuery;
  *
  * Rename Class to a relevant name Add add relevant facade methods
  */
-public class FacadeExample {
+public class MovieFacade {
 
-    private static FacadeExample instance;
+    private static MovieFacade instance;
     private static EntityManagerFactory emf;
 
     //Private Constructor to ensure Singleton
-    private FacadeExample() {
+    private MovieFacade() {
     }
 
     /**
@@ -26,10 +26,10 @@ public class FacadeExample {
      * @param _emf
      * @return an instance of this facade class.
      */
-    public static FacadeExample getFacadeExample(EntityManagerFactory _emf) {
+    public static MovieFacade getMovieFacade(EntityManagerFactory _emf) {
         if (instance == null) {
             emf = _emf;
-            instance = new FacadeExample();
+            instance = new MovieFacade();
         }
         return instance;
     }
@@ -42,8 +42,8 @@ public class FacadeExample {
     public long getCount() {
         EntityManager em = emf.createEntityManager();
         try {
-            long renameMeCount = (long) em.createQuery("SELECT COUNT(r) FROM RenameMe r").getSingleResult();
-            return renameMeCount;
+            long movieCount = (long) em.createQuery("SELECT COUNT(m) FROM Movie m").getSingleResult();
+            return movieCount;
         } finally {
             em.close();
         }
@@ -53,8 +53,8 @@ public class FacadeExample {
     public List<DTO> getAll() {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<DTO> renameMe = em.createQuery("SELECT new dto.DTO(r) FROM RenameMe r", DTO.class);
-            return renameMe.getResultList();
+            TypedQuery<DTO> movies = em.createQuery("SELECT new dto.DTO(m) FROM Movie m", DTO.class);
+            return movies.getResultList();
         } finally {
             em.close();
         }
@@ -64,9 +64,9 @@ public class FacadeExample {
     public DTO getByName(String name) {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<DTO> renameMe = em.createQuery("SELECT new dto.DTO(r) FROM RenameMe r WHERE r.dummyStr1 = :name", DTO.class);
-            renameMe.setParameter("name", name);
-            return renameMe.getSingleResult();
+            TypedQuery<DTO> movie = em.createQuery("SELECT new dto.DTO(m) FROM Movie m WHERE m.name = :name", DTO.class);
+            movie.setParameter("name", name);
+            return movie.getSingleResult();
         } finally {
             em.close();
         }
@@ -75,7 +75,7 @@ public class FacadeExample {
     public DTO getById(int id) {
         EntityManager em = emf.createEntityManager();
         try {
-            return new DTO(em.find(RenameMe.class, id));
+            return new DTO(em.find(Movie.class, id));
         } finally {
             em.close();
         }
